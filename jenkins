@@ -14,7 +14,7 @@ pipeline {
         stage('Clone release') {
             steps {
                 echo '# cloning the application...'
-                git credentialsId: 'git-th3-ssh', url: 'https://github.com/th33ngi/java-maven-automation-win.git', branch: 'main'
+                git credentialsId: 'git-th3-ssh', url: 'https://github.com/th33ngi/java-maven-automation-win.git'
             }
         }
         
