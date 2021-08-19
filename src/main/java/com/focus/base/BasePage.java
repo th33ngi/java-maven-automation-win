@@ -34,7 +34,7 @@ public class BasePage extends Page {
 		if (browserName.equals("chrome")) {
 			if (osName.equals("win")) {
 				optionsManager = new OptionsManager(prop);
-				System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir")+"\\drivers\\chromedriver.exe");
+				System.setProperty("webdriver.chrome.driver","./drivers/chromedriver.exe");
 				driver = new ChromeDriver(optionsManager.getChromeOptions());
 			} else {
 				optionsManager = new OptionsManager(prop);
