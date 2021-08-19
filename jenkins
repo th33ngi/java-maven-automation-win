@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+    
+    environment {
+        maven = 'default'
+    }
+    stages {
+        stage('Initialize') {
+            steps {
+                echo '# starting the pipeline execution...'
+            }
+        }
+        
+        stage('Clone release') {
+            steps {
+                echo '# cloning the application...'
+                git credentialsId: 'git-th3-ssh', url: 'https://github.com/th33ngi/java-maven-automation-win.git', branch: 'main'
+            }
+        }
+        
+        stage('Build release') {
+            steps {
+                echo '# building the application...'
+                bat "mvn -B -DskipTests clean install"
+            }
+        }
+        
+        stage('Run test plan') { 
+            steps {
+                echo '# teting the application...'
+                bat 'mvn test' 
+            }
+        }
+        
+        /*stage('Deploy release') { 
+            steps {
+                echo '# deploying the application...'
+               	bat 'mvn -B -DskipTests deploy -DaltDeploymentRepository=internal.repo::default::file:///C:/Users/jenkins_deployments'
+            }
+        }*/
+    }
+    
+    post {
+        success {
+            mail to: 'qastacknotifications@gmail.com',
+            subject: "Pipeline Job ${currentBuild.fullDisplayName} has FINISHED SUCCESSFULY",
+            body: "CONGRATULATIONS! The pipeline job ${currentBuild.fullDisplayName} on ${env.BUILD_URL} has FINISHED WITHOUT ERRORS"
+        }
+        failure {
+            mail to: 'qastacknotifications@gmail.com',
+            subject: "Pipeline Job ${currentBuild.fullDisplayName} has FAILED",
+            body: "ALERT! The pipeline job ${currentBuild.fullDisplayName} on ${env.BUILD_URL} has FINISHED WITH ERRORS"
+        }
+        always {
+            cleanWs()
+        }
+    }
+}
